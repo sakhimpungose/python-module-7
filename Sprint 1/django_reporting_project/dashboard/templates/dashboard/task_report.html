@@ -1,0 +1,67 @@
+{% extends "dashboard/base.html" %}
+{% block content %}
+<div id="pivot"></div>
+<div id="pivot_chart"></div>
+
+<script src="https://cdn.flexmonster.com/flexmonster.js"></script>
+<script type="text/javascript">
+    var pivot = new Flexmonster({
+        container: "#pivot",
+        componentFolder: "https://cdn.flexmonster.com/",
+        height: 600,
+        toolbar: true,
+        report: {
+            "dataSource": {
+                "type": "api",
+                "url": "http://localhost:9204/mongo", // the url where our connector is running
+                "index": "task" // specify the collection’s name
+            },
+            "slice": {
+                "reportFilters": [
+                    {
+                        "uniqueName": "Module",
+                        "filter": {
+                            "members": [
+                                "module.[]"
+                            ]
+                        }
+                    }
+                ],
+                "rows": [{ 
+                    "uniqueName": "Category", 
+                    "filter": {
+                        "members": [
+                            "status.[complete]",
+                            "status.[uncompleted]"
+                        ]
+                    }                    
+                }],
+                "columns": [{
+                    "uniqueName": "Status",
+                    "filter": {
+                        "members": [
+                            "status.[complete]",
+                            "status.[uncompleted]"
+                        ]
+                    },                    
+                },
+                {
+                    "uniqueName": "[Measures]"
+                }],
+                "measures": [
+                    {
+                        "uniqueName": "Status",
+                        "aggregation": "count"                   
+                    },
+                    {
+                        "uniqueName": "Estimated Duration",
+                        "aggregation": "sum"                   
+                    },
+
+                
+                ]
+            }
+        }
+    });
+</script>
+{% endblock %}
