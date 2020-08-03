@@ -1,0 +1,70 @@
+{% extends "dashboard/base.html" %}
+{% block content %}
+<div id="pivot"></div>
+
+<script src="https://cdn.flexmonster.com/flexmonster.js"></script>
+<script type="text/javascript">
+    var pivot = new Flexmonster({
+        container: "#pivot",
+        componentFolder: "https://cdn.flexmonster.com/",
+        height: 600,
+        toolbar: true,
+        report: {
+            "dataSource": {
+                "type": "api",
+                "url": "http://localhost:9204/mongo", // the url where our connector is running
+                "index": "transactions" // specify the collection’s name
+            },
+            "slice": {
+                "rows": [
+                    {
+                        "uniqueName": "Description"
+                    }
+                ],
+                "columns": [
+                    {
+                        "uniqueName": "[Measures]"
+                    }
+                ],
+                "measures": [
+                    {
+                        "uniqueName": "Quantity",
+                        "aggregation": "sum"
+                    }
+                ]
+            },
+            "mapping": {
+                "InvoiceNo": {
+                    "caption": "Invoice Number",
+                    "type": "string"
+                },
+                "StockCode": {
+                    "caption": "Stock Code",
+                    "type": "string"
+                },
+                "Description": {
+                    "type": "string"
+                },
+                "Quantity": {
+                    "type": "number"
+                },
+                "InvoiceDate": {
+                    "type": "string",
+                    "caption": "Invoice Date"
+                },
+                "UnitPrice": {
+                    "type": "number",
+                    "caption": "Unit Price"
+                },
+                "CustomerID": {
+                    "type": "string",
+                    "caption": "Customer ID"
+                },
+                "Country": {
+                    "type": "string"
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
